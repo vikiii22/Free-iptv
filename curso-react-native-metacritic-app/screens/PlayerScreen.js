@@ -1,27 +1,33 @@
-import React, { useRef } from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import React from 'react';
+import { Platform, View, Text, StyleSheet, Dimensions } from 'react-native';
 import { Video } from 'expo-av';
 
 const PlayerScreen = ({ route }) => {
   const { channelName, channelUrl } = route.params;
-  const videoRef = useRef(null); // Ref para manejar el video
-
-  const handleError = (error) => {
-    console.error('Error al cargar el video:', error);
-  };
+  const isHTTP = channelUrl.startsWith('http://');
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{channelName}</Text>
-      <Video
-        ref={videoRef}
-        source={{ uri: channelUrl }} // Asegúrate de que este sea un enlace HTTP válido
-        style={styles.video}
-        useNativeControls
-        resizeMode="contain"
-        shouldPlay
-        onError={handleError} // Maneja errores al cargar el video
-      />
+      {Platform.OS === 'ios' && isHTTP ? (
+        console.log('channelUrl', channelUrl),
+        <Video
+          source={{ uri: channelUrl }}
+          style={styles.video}
+          useNativeControls
+          resizeMode="contain"
+          shouldPlay
+          onError={err => console.log('Error:', err)}
+        />
+      ) : (
+        <Video
+          source={{ uri: channelUrl }}
+          style={styles.video}
+          useNativeControls
+          resizeMode="contain"
+          shouldPlay
+        />
+      )}
     </View>
   );
 };
