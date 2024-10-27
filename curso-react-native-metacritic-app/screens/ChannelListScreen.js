@@ -1,14 +1,25 @@
-import React from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, TextInput } from 'react-native';
 
 const ChannelListScreen = ({ route, navigation }) => {
   const { listName, channels } = route.params;
+  const [searchText, setSearchText] = useState('');
+
+  const filteredChannels = channels.filter(channel =>
+    channel.name.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Canales de {listName}</Text>
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Buscar canal..."
+        value={searchText}
+        onChangeText={setSearchText}
+      />
       <FlatList
-        data={channels}
+        data={filteredChannels}
         keyExtractor={(item) => item.url}
         renderItem={({ item }) => (
           <TouchableOpacity
@@ -30,11 +41,12 @@ const ChannelListScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20 },
   title: { fontSize: 24, marginBottom: 20 },
+  searchInput: { height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 20, paddingHorizontal: 10 },
   channelItem: { flexDirection: 'row', alignItems: 'center', padding: 10, borderBottomWidth: 1, borderColor: '#ccc' },
   logo: { width: 50, height: 50, marginRight: 10 },
-  textContainer: { flexDirection: 'column' },
+  textContainer: { flex: 1 },
   channelText: { fontSize: 18 },
-  groupText: { fontSize: 14, color: '#777' },
+  groupText: { fontSize: 14, color: 'gray' },
 });
 
 export default ChannelListScreen;

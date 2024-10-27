@@ -3,7 +3,7 @@
     "name": "curso-react-native-metacritic-app",
     "slug": "curso-react-native-metacritic-app",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "all",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
