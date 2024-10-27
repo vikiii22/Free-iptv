@@ -1,4 +1,3 @@
-// ChannelListScreen.js
 import React from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Image } from 'react-native';
 
