@@ -5,7 +5,6 @@ const ChannelListScreen = ({ route, navigation }) => {
   const { listName, channels } = route.params;
   const [searchText, setSearchText] = useState('');
 
-  // Filtrar duplicados utilizando un Set
   const uniqueChannels = Array.from(new Set(channels.map(channel => channel.url)))
     .map(url => {
       return channels.find(channel => channel.url === url);

@@ -14,10 +14,8 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.viking.freeIptv",
-      "infoPlist": {
-        "NSAppTransportSecurity": {
-          "NSAllowsArbitraryLoads": true
-        }
+      "NSAppTransportSecurity": {
+        "NSAllowsArbitraryLoads": true
       }
     },
     "android": {
@@ -25,7 +23,8 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": []
+      "permissions": [],
+      "package": "com.viking.freeIptv"
     },
     "web": {
       "favicon": "./assets/favicon.png"

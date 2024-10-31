@@ -1,9 +1,9 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import HomeScreen from './screens/HomeScreen';
-import ChannelListScreen from './screens/ChannelListScreen';
-import PlayerScreen from './screens/PlayerScreen';
+import HomeScreen from './src/screens/HomeScreen';
+import ChannelListScreen from './src/screens/ChannelListScreen';
+import PlayerScreen from './src/screens/PlayerScreen';
 
 const Stack = createStackNavigator();
 
