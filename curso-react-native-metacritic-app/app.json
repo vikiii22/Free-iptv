@@ -12,8 +12,9 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.viking.freeIptv",
+      "NSCameraUsageDescription": "This app uses the camera to take pictures.",
+      "NSPhotoLibraryUsageDescription": "This app uses the photo library to store pictures.",
+      "NSMicrophoneUsageDescription": "This app uses the microphone to record audio.",
       "NSAppTransportSecurity": {
         "NSAllowsArbitraryLoads": true
       }
