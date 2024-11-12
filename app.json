@@ -12,12 +12,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.viking.freeIptv",
-      "infoPlist": {
-        "NSAppTransportSecurity": {
-          "NSAllowsArbitraryLoads": true
-        }
+      "NSCameraUsageDescription": "This app uses the camera to take pictures.",
+      "NSPhotoLibraryUsageDescription": "This app uses the photo library to store pictures.",
+      "NSMicrophoneUsageDescription": "This app uses the microphone to record audio.",
+      "NSAppTransportSecurity": {
+        "NSAllowsArbitraryLoads": true
       }
     },
     "android": {
@@ -25,13 +24,20 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": []
+      "permissions": [],
+      "package": "com.viking.freeIptv"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "react-native-video"
+      "react-native-video",
+      [
+        "expo-av",
+        {
+          "microphonePermissions": "Allow $(PRODUCT_NAME) to access your microphone"
+        }
+      ]
     ],
     "extra": {
       "eas": {
