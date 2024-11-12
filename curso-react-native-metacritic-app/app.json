@@ -31,7 +31,13 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "react-native-video"
+      "react-native-video",
+      [
+        "expo-av",
+        {
+          "microphonePermissions": "Allow $(PRODUCT_NAME) to access your microphone"
+        }
+      ]
     ],
     "extra": {
       "eas": {
