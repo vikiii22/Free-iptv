@@ -66,17 +66,32 @@ const HomeScreen = ({ navigation }) => {
         for (let i = 0; i < lines.length; i++) {
             if (lines[i].startsWith('#EXTINF')) {
                 const nameMatch = lines[i].match(/,(.*)/);
-                const name = nameMatch ? nameMatch[1] : 'Desconocido';
-
+                const name = nameMatch ? nameMatch[1].trim() : 'Desconocido';
+    
+                const idMatch = lines[i].match(/id="(.*?)"/);
+                const id = idMatch ? idMatch[1] : null;
+    
+                const logoMatch = lines[i].match(/logo="(.*?)"/);
+                const logo = logoMatch ? logoMatch[1] : null;
+    
+                const groupMatch = lines[i].match(/title="(.*?)"/);
+                const group = groupMatch ? groupMatch[1] : null;
+    
                 const url = lines[i + 1] ? lines[i + 1].trim() : null;
 
                 if (url) {
-                    channels.push({ name, url });
+                    channels.push({
+                        name,
+                        url,
+                        id,
+                        logo,
+                        group
+                    })
                 }
             }
         }
 
-        return channels;
+        return channels
     };
 
     return (
