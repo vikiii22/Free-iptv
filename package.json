@@ -1,5 +1,5 @@
 {
-  "name": "curso-react-native-metacritic-app",
+  "name": "free-iptv",
   "version": "1.0.0",
   "main": "expo/AppEntry.js",
   "scripts": {
@@ -24,7 +24,9 @@
     "react-native-screens": "3.31.1",
     "react-native-video": "^6.7.0",
     "react-native-web": "~0.19.10",
-    "react-navigation": "^5.0.0"
+    "react-navigation": "^5.0.0",
+    "typescript": "~5.3.3",
+    "@types/react": "~18.2.79"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
