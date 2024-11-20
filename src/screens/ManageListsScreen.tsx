@@ -8,6 +8,7 @@ const ManageListsScreen = ({ navigation }) => {
     const [channels, setChannels] = useState([])
 
     const { clearChannelList, handleLoadList } = useChannels()
+    // clearChannelList()
 
     return (
         <View style={styles.container}>
