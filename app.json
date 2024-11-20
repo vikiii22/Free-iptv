@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "curso-react-native-metacritic-app",
-    "slug": "curso-react-native-metacritic-app",
+    "name": "Free IPTV",
+    "slug": "free-iptv",
     "version": "1.0.0",
     "orientation": "all",
     "icon": "./assets/icon.png",
@@ -17,8 +17,7 @@
       "NSMicrophoneUsageDescription": "This app uses the microphone to record audio.",
       "NSAppTransportSecurity": {
         "NSAllowsArbitraryLoads": true
-      },
-      "bundleIdentifier": "com.viking.freeIptv"
+      }
     },
     "android": {
       "adaptiveIcon": {
