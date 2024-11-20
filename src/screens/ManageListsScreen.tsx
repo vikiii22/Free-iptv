@@ -1,25 +1,31 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import * as SecureStore from 'expo-secure-store'
 import axios from 'axios'
+import { IChannel } from '../interfaces/channels'
 
 const ManageListsScreen = ({ navigation }) => {
     const [listName, setListName] = useState('')
     const [m3u8Url, setM3u8Url] = useState('')
     const [channels, setChannels] = useState([])
 
-    const saveChannelList = async (channels) => {
+    const saveChannelList = async (listName: string, channels: IChannel[]) => {
         try {
-            await AsyncStorage.setItem('channelList', JSON.stringify(channels))
-            console.log('Lista de canales guardada correctamente.')
+          const storedLists = await SecureStore.getItemAsync('lists')
+          const lists = storedLists ? JSON.parse(storedLists) : {}
+      
+          lists[listName] = channels
+
+          await SecureStore.setItemAsync('lists', JSON.stringify(lists))
+          console.log(`Lista "${listName}" guardada correctamente.`)
         } catch (error) {
-            console.error('Error al guardar la lista de canales:', error)
+          console.error('Error al guardar la lista de canales:', error)
         }
     }
 
     const clearChannelList = async () => {
         try {
-            await AsyncStorage.removeItem('channelList')
+            await SecureStore.deleteItemAsync('lists')
             setChannels([])
             console.log('Lista de canales eliminada correctamente.')
         } catch (error) {
@@ -37,7 +43,7 @@ const ManageListsScreen = ({ navigation }) => {
             const response = await axios.get(m3u8Url)
             const parsedChannels = parseM3U8(response.data)
             setChannels(parsedChannels)
-            saveChannelList(parsedChannels)
+            saveChannelList(listName, parsedChannels)
             navigation.navigate('manage-lists', { listName, channels: parsedChannels })
         } catch (error) {
             Alert.alert('Error', 'No se pudo cargar la lista m3u8.')

@@ -1,4 +1,4 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from 'expo-secure-store';
 import { useAppContext } from "../context/AppContext";
 
 export const useChannels = () => {
@@ -10,13 +10,14 @@ export const useChannels = () => {
 
     const loadLists = async() => {
         try {
-            const savedLists = await AsyncStorage.getItem('lists')
+            const savedLists = await SecureStore.getItemAsync('lists')
+
             if (savedLists) {
                 const data = JSON.parse(savedLists)
 
-                if (data?.lists) {
-                    Object.keys(data.lists).forEach((listName) => {
-                        actionAddLists(listName, data.lists[listName])
+                if (data) {
+                    Object.keys(data).forEach((listName) => {
+                        actionAddLists(listName, data[listName])
                     })
                 }
             }
@@ -26,6 +27,7 @@ export const useChannels = () => {
     }
 
     return {
-        initLoad
+        initLoad,
+        lists
     }
 }

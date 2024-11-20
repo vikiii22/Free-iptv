@@ -3,6 +3,7 @@
     "name": "Free IPTV",
     "slug": "free-iptv",
     "version": "1.0.0",
+    "jsEngine": "jsc",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
@@ -33,6 +34,13 @@
         "expo-av",
         {
           "microphonePermissions": "Allow $(PRODUCT_NAME) to access your microphone"
+        }
+      ],
+      [
+        "expo-secure-store",
+        {
+          "configureAndroidBackup": true,
+          "faceIDPermission": "Allow $(PRODUCT_NAME) to access your Face ID biometric data."
         }
       ]
     ],
