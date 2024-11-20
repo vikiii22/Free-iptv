@@ -3,35 +3,14 @@ import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native'
 import * as SecureStore from 'expo-secure-store'
 import axios from 'axios'
 import { IChannel } from '../interfaces/channels'
+import { useChannels } from '../hooks/useChannels'
 
 const ManageListsScreen = ({ navigation }) => {
     const [listName, setListName] = useState('')
     const [m3u8Url, setM3u8Url] = useState('')
     const [channels, setChannels] = useState([])
 
-    const saveChannelList = async (listName: string, channels: IChannel[]) => {
-        try {
-          const storedLists = await SecureStore.getItemAsync('lists')
-          const lists = storedLists ? JSON.parse(storedLists) : {}
-      
-          lists[listName] = channels
-
-          await SecureStore.setItemAsync('lists', JSON.stringify(lists))
-          console.log(`Lista "${listName}" guardada correctamente.`)
-        } catch (error) {
-          console.error('Error al guardar la lista de canales:', error)
-        }
-    }
-
-    const clearChannelList = async () => {
-        try {
-            await SecureStore.deleteItemAsync('lists')
-            setChannels([])
-            console.log('Lista de canales eliminada correctamente.')
-        } catch (error) {
-            console.error('Error al eliminar la lista de canales:', error)
-        }
-    }
+    const { saveChannelList, clearChannelList } = useChannels()
 
     const handleLoadList = async () => {
         if (!listName || !m3u8Url) {
@@ -93,7 +72,13 @@ const ManageListsScreen = ({ navigation }) => {
                         onPress={() => navigation.navigate('manage-lists', { listName, channels })}
                     />
                     <View style={{ height: 20 }} />
-                    <Button title="Eliminar lista de canales" onPress={clearChannelList} />
+                    <Button 
+                        title="Eliminar lista de canales"
+                        onPress={() => {
+                            clearChannelList()
+                            setChannels([])
+                        }}
+                    />
                 </View>
             ) : (
                 <>

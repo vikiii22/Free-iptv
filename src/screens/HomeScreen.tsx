@@ -5,7 +5,7 @@ import { useAppContext } from '../context/AppContext'
 import { useChannels } from '../hooks/useChannels'
 import { IChannel } from '../interfaces/channels'
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({}) {
     const { lists } = useAppContext()
     const { initLoad } = useChannels()
 
