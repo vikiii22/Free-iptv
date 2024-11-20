@@ -1,8 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native'
-import * as SecureStore from 'expo-secure-store'
-import axios from 'axios'
-import { IChannel } from '../interfaces/channels'
+import React, { useState } from 'react'
+import { View, Text, TextInput, Button, StyleSheet } from 'react-native'
 import { useChannels } from '../hooks/useChannels'
 
 const ManageListsScreen = ({ navigation }) => {
@@ -10,58 +7,7 @@ const ManageListsScreen = ({ navigation }) => {
     const [m3u8Url, setM3u8Url] = useState('')
     const [channels, setChannels] = useState([])
 
-    const { saveChannelList, clearChannelList } = useChannels()
-
-    const handleLoadList = async () => {
-        if (!listName || !m3u8Url) {
-            Alert.alert('Error', 'Por favor, completa todos los campos.')
-            return
-        }
-
-        try {
-            const response = await axios.get(m3u8Url)
-            const parsedChannels = parseM3U8(response.data)
-            setChannels(parsedChannels)
-            saveChannelList(listName, parsedChannels)
-            navigation.navigate('manage-lists', { listName, channels: parsedChannels })
-        } catch (error) {
-            Alert.alert('Error', 'No se pudo cargar la lista m3u8.')
-        }
-    }
-
-    const parseM3U8 = (data) => {
-        const channels = [] 
-        const lines = data.split('\n')
-        for (let i = 0; i < lines.length; i++) {
-            if (lines[i].startsWith('#EXTINF')) {
-                const nameMatch = lines[i].match(/,(.*)/)
-                const name = nameMatch ? nameMatch[1].trim() : 'Desconocido'
-    
-                const idMatch = lines[i].match(/id="(.*?)"/)
-                const id = idMatch ? idMatch[1] : null
-    
-                const logoMatch = lines[i].match(/logo="(.*?)"/)
-                const logo = logoMatch ? logoMatch[1] : null
-    
-                const groupMatch = lines[i].match(/title="(.*?)"/)
-                const group = groupMatch ? groupMatch[1] : null
-    
-                const url = lines[i + 1] ? lines[i + 1].trim() : null
-
-                if (url) {
-                    channels.push({
-                        name,
-                        url,
-                        id,
-                        logo,
-                        group
-                    })
-                }
-            }
-        }
-
-        return channels
-    }
+    const { clearChannelList, handleLoadList } = useChannels()
 
     return (
         <View style={styles.container}>
@@ -96,7 +42,7 @@ const ManageListsScreen = ({ navigation }) => {
                         onChangeText={setM3u8Url}
                         value={m3u8Url}
                     />
-                    <Button title="Cargar lista" onPress={handleLoadList} />
+                    <Button title="Cargar lista" onPress={() => handleLoadList(listName, m3u8Url)} />
                 </>
             )}
         </View>

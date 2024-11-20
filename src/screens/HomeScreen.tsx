@@ -58,7 +58,7 @@ export default function HomeScreen({}) {
             />
             <ScrollView style={styles.scrollView}>
                 <FlatList
-                    data={filteredChannels}
+                    data={filteredChannels.slice(0, 10)}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
                         <TouchableOpacity
