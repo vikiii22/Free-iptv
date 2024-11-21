@@ -1,16 +1,40 @@
-import React, { useState } from 'react'
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { View, TextInput, Button, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
+import CardList from '../components/Cards/CardList/CardList'
+import Header from '../components/Header/Header'
+import TextStyled from '../components/Text/TextStyled'
+import { useAppContext } from '../context/AppContext'
 import { useChannels } from '../hooks/useChannels'
+import MainLayout from '../layouts/MainLayout'
 
-const ManageListsScreen = ({ navigation }) => {
+export default function ManageListsScreen({ navigation }) {
+    const { lists } = useAppContext()
+
+    const [savedLists, setSavedLists] = useState<string[]>([])
     const [listName, setListName] = useState('')
     const [m3u8Url, setM3u8Url] = useState('')
     const [channels, setChannels] = useState([])
 
     const { clearChannelList, handleLoadList } = useChannels()
 
+    useEffect(() => {
+        setSavedLists(Object.keys(lists))
+    }, [])
+
+    const styles = StyleSheet.create({
+        input: { borderWidth: 1, padding: 10, marginVertical: 10 },
+    })
+
     return (
-        <View style={styles.container}>
+        <MainLayout>
+            <Header title='Mis listas'/>
+            <FlatList
+                data={savedLists}
+                keyExtractor={(item) => item.toLocaleLowerCase()}
+                renderItem={({ item }) => (
+                    <CardList name={item}/>
+                )}
+            />
             {channels.length > 0 ? (
                 <View>
                     <Button
@@ -28,14 +52,14 @@ const ManageListsScreen = ({ navigation }) => {
                 </View>
             ) : (
                 <>
-                    <Text>Nombre de la lista:</Text>
+                    <TextStyled>Nombre de la lista:</TextStyled>
                     <TextInput
                         style={styles.input}
                         placeholder="Ejemplo: Mis Canales"
                         onChangeText={setListName}
                         value={listName}
                     />
-                    <Text>URL de la lista m3u8:</Text>
+                    <TextStyled>URL de la lista m3u8:</TextStyled>
                     <TextInput
                         style={styles.input}
                         placeholder="Ejemplo: http://example.com/playlist.m3u8"
@@ -45,13 +69,6 @@ const ManageListsScreen = ({ navigation }) => {
                     <Button title="Cargar lista" onPress={() => handleLoadList(listName, m3u8Url)} />
                 </>
             )}
-        </View>
+        </MainLayout>
     )
 }
-
-const styles = StyleSheet.create({
-    container: { flex: 1, justifyContent: 'center', padding: 20 },
-    input: { borderWidth: 1, padding: 10, marginVertical: 10 },
-})
-
-export default ManageListsScreen
