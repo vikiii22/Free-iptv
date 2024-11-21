@@ -4,6 +4,7 @@ import Player from '../components/Player/Player'
 import { useAppContext } from '../context/AppContext'
 import { useChannels } from '../hooks/useChannels'
 import { IChannel } from '../interfaces/channels'
+import Card from '../components/Card/Card'
 
 export default function HomeScreen({}) {
     const { lists } = useAppContext()
@@ -73,20 +74,15 @@ export default function HomeScreen({}) {
                 data={displayedChannels}
                 keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
                 renderItem={({ item, index }) => (
-                    <TouchableOpacity
-                        key={item.id ? item.id.toString() : index.toString()}
-                        style={styles.channelItem}
-                        onPress={() => setSelectedChannel(item)}
-                    >
-                        <Image source={{ uri: item.logo }} style={styles.logo} />
-                        <View style={styles.textContainer}>
-                            <Text style={styles.channelText}>{item.name}</Text>
-                            <Text style={styles.groupText}>{item.group}</Text>
-                        </View>
-                    </TouchableOpacity>
+                    <Card 
+                        {...item} 
+                        key={index} 
+                        onPressChannel={() => setSelectedChannel(item)} 
+                        onToggleFavorite={() => console.log('Toggle favorite')}
+                    />
                 )}
                 onEndReached={loadMoreChannels}
-                onEndReachedThreshold={0.5} // Define qué tan cerca del final se debe disparar el evento
+                onEndReachedThreshold={0.5}
             />
         </View>
     )

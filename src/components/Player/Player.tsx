@@ -1,6 +1,6 @@
 import { ResizeMode, Video } from 'expo-av'
 import { Dimensions, StyleSheet } from 'react-native'
-import { IPlayerProps } from './player.interface'
+import { IPlayerProps } from './Player.interface'
 
 export default function Player(props: IPlayerProps) {
     const { url } = props
