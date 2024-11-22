@@ -4,7 +4,7 @@ import Player from '../components/Player/Player'
 import { useAppContext } from '../context/AppContext'
 import { useChannels } from '../hooks/useChannels'
 import { IChannel } from '../interfaces/channels'
-import Card from '../components/Card/Card'
+import CardChannel from '../components/Cards/CardChannel/CardChannel'
 
 export default function HomeScreen({}) {
     const { lists } = useAppContext()
@@ -74,7 +74,7 @@ export default function HomeScreen({}) {
                 data={displayedChannels}
                 keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
                 renderItem={({ item, index }) => (
-                    <Card 
+                    <CardChannel 
                         {...item} 
                         key={index} 
                         onPressChannel={() => setSelectedChannel(item)} 

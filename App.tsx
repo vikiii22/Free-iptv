@@ -48,39 +48,15 @@ export default function App() {
                 component={HomeScreen}
               />
               <Stack.Screen
-                options={({ navigation }) => ({
-                  ...defaultOptions,
-                  headerRight: () => (
-                    <Button
-                      title="Live"
-                      onPress={() => navigation.navigate('Free IPTV')}
-                    />
-                  ),
-                  headerLeft: () => (
-                    <Button
-                      title="Mi Cuenta"
-                      onPress={() => navigation.navigate('Mi Cuenta')}
-                    />
-                  )
+                options={({}) => ({
+                  headerShown: false
                 })}
                 name="Mis Listas"
                 component={ManageListsScreen}
               />
               <Stack.Screen
-                options={({ navigation }) => ({
-                  ...defaultOptions,
-                  headerRight: () => (
-                    <Button
-                      title="Mis Listas"
-                      onPress={() => navigation.navigate('Mis Listas')}
-                    />
-                  ),
-                  headerLeft: () => (
-                    <Button
-                      title="Free IPTV"
-                      onPress={() => navigation.navigate('Free IPTV')}
-                    />
-                  )
+                options={({}) => ({
+                  headerShown: false
                 })}
                 name="Mi Cuenta"
                 component={ManageListsScreen}

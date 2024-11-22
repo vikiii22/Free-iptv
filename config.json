@@ -1,4 +1,23 @@
 {
+    "theme": {
+        "colors": {
+            "primary": "#497EE4",
+            "secondary": "#212B4E",
+            "background": "#101324",
+            "light": "#E7F2FF",
+            "dark": "#111"
+        },
+        "fontSize": {
+            "sm": 14,
+            "md": 18,
+            "lg": 24
+        },
+        "borderRadius": {
+            "sm": 5,
+            "md": 10,
+            "lg": 20   
+        }
+    },
     "lists": {
         "es": "https://iptv-org.github.io/iptv/languages/spa.m3u",
         "private": ""
