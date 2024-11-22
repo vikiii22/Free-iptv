@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { LinearGradient } from "expo-linear-gradient";
-import { ICardsProps } from "./Card.interface";
+import { ICardsProps } from "../../Cards/cards.interface";
 
 
 const styles = StyleSheet.create({
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
 });
 
 
-export default function Card(props: ICardsProps) {
+export default function CardChannel(props: ICardsProps) {
     const { name, logo, group, favorite, onPressChannel, onToggleFavorite } = props;
 
     return (
