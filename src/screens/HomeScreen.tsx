@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, TextInput, ScrollView } from 'react-native'
+import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, TextInput } from 'react-native'
 import Player from '../components/Player/Player'
 import { useAppContext } from '../context/AppContext'
 import { useChannels } from '../hooks/useChannels'
 import { IChannel } from '../interfaces/channels'
+import Card from '../components/Card/Card'
 
 export default function HomeScreen({}) {
     const { lists } = useAppContext()
@@ -13,6 +14,8 @@ export default function HomeScreen({}) {
     const [initialChannels, setInitialChannels] = useState<IChannel[]>([])
     const [filteredChannels, setFilteredChannels] = useState<IChannel[]>([])
     const [selectedChannel, setSelectedChannel] = useState<IChannel>(null)
+    const [displayedChannels, setDisplayedChannels] = useState<IChannel[]>([])
+    const itemsPerPage = 10
 
     useEffect(() => {
         initLoad()
@@ -24,18 +27,30 @@ export default function HomeScreen({}) {
             if (firstListSaved) {
                 setFilteredChannels(lists[firstListSaved])
                 setInitialChannels(lists[firstListSaved])
+                setDisplayedChannels(lists[firstListSaved].slice(0, itemsPerPage))
                 setSelectedChannel(lists[firstListSaved][0])
             }
         }
     }, [lists])
 
     useEffect(() => {
-        const channels = initialChannels.filter(channel => channel.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        const channels = initialChannels.filter(channel => 
+            channel.name.toLowerCase().includes(searchTerm.toLowerCase())
+        )
         setFilteredChannels(searchTerm.length > 0 ? channels : initialChannels)
-    }, [searchTerm])
+        setDisplayedChannels((searchTerm.length > 0 ? channels : initialChannels).slice(0, itemsPerPage))
+    }, [searchTerm, initialChannels])
+
+    const loadMoreChannels = () => {
+        const currentCount = displayedChannels.length
+        const nextChannels = filteredChannels.slice(currentCount, currentCount + itemsPerPage)
+        if (nextChannels.length > 0) {
+            setDisplayedChannels(prevChannels => [...prevChannels, ...nextChannels])
+        }
+    }
 
     const styles = StyleSheet.create({
-        container: { flex: 1},
+        container: { flex: 1 },
         title: { fontSize: 24, marginBottom: 20 },
         searchInput: { height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 20, paddingHorizontal: 10 },
         channelItem: { flexDirection: 'row', alignItems: 'center', padding: 10, borderBottomWidth: 1, borderColor: '#ccc' },
@@ -43,12 +58,11 @@ export default function HomeScreen({}) {
         textContainer: { flex: 1 },
         channelText: { fontSize: 18 },
         groupText: { fontSize: 14, color: 'gray' },
-        scrollView: { height: 100 }
     })
 
     return (
         <View style={styles.container}>
-            <Player {...selectedChannel}/>
+            <Player {...selectedChannel} />
             <Text style={styles.title}>Canales de {'listName'}</Text>
             <TextInput
                 style={styles.searchInput}
@@ -56,25 +70,20 @@ export default function HomeScreen({}) {
                 value={searchTerm}
                 onChangeText={setSearchTerm}
             />
-            <ScrollView style={styles.scrollView}>
-                <FlatList
-                    data={filteredChannels.slice(0, 10)}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity
-                            key={item.id}
-                            style={styles.channelItem}
-                            onPress={() => setSelectedChannel(item)}
-                        >
-                            <Image source={{ uri: item.logo }} style={styles.logo} />
-                            <View style={styles.textContainer}>
-                                <Text style={styles.channelText}>{item.name}</Text>
-                                <Text style={styles.groupText}>{item.group}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    )}
-                />
-            </ScrollView>
+            <FlatList
+                data={displayedChannels}
+                keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
+                renderItem={({ item, index }) => (
+                    <Card 
+                        {...item} 
+                        key={index} 
+                        onPressChannel={() => setSelectedChannel(item)} 
+                        onToggleFavorite={() => console.log('Toggle favorite')}
+                    />
+                )}
+                onEndReached={loadMoreChannels}
+                onEndReachedThreshold={0.5}
+            />
         </View>
     )
 }

@@ -19,6 +19,7 @@
         }
     },
     "lists": {
-        "es": "https://iptv-org.github.io/iptv/languages/spa.m3u"
+        "es": "https://iptv-org.github.io/iptv/languages/spa.m3u",
+        "private": ""
     }
 }

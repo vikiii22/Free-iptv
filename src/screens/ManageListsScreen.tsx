@@ -16,6 +16,7 @@ export default function ManageListsScreen({ navigation }) {
     const [channels, setChannels] = useState([])
 
     const { clearChannelList, handleLoadList } = useChannels()
+    // clearChannelList()
 
     useEffect(() => {
         setSavedLists(Object.keys(lists))

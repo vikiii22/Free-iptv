@@ -3,5 +3,6 @@ export interface IChannel {
     name: string
     group: string
     url: string
-    logo: string
+    logo: string,
+    favorite: boolean
 }
