@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, TextInput } from 'react-native'
+import { FlatList, StyleSheet, TextInput } from 'react-native'
 import Player from '../components/Player/Player'
 import { useAppContext } from '../context/AppContext'
 import { useChannels } from '../hooks/useChannels'
 import { IChannel } from '../interfaces/channels'
 import CardChannel from '../components/Cards/CardChannel/CardChannel'
+import MainLayout from '../layouts/MainLayout'
+import TextStyled from '../components/Text/TextStyled'
+import Header from '../components/Header/Header'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
-export default function HomeScreen({}) {
+export default function HomeScreen({ navigation }) {
     const { lists } = useAppContext()
     const { initLoad } = useChannels()
 
@@ -50,7 +54,6 @@ export default function HomeScreen({}) {
     }
 
     const styles = StyleSheet.create({
-        container: { flex: 1 },
         title: { fontSize: 24, marginBottom: 20 },
         searchInput: { height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 20, paddingHorizontal: 10 },
         channelItem: { flexDirection: 'row', alignItems: 'center', padding: 10, borderBottomWidth: 1, borderColor: '#ccc' },
@@ -61,9 +64,17 @@ export default function HomeScreen({}) {
     })
 
     return (
-        <View style={styles.container}>
+        <MainLayout>
+            <Header
+                title='Free IPTV'
+                leftComponent={
+                    <TouchableOpacity onPress={() => navigation.navigate('Mis Listas')}>
+                        <TextStyled>{'Mis Listas'}</TextStyled>
+                    </TouchableOpacity>
+                }
+            />
             <Player {...selectedChannel} />
-            <Text style={styles.title}>Canales de {'listName'}</Text>
+            <TextStyled style={styles.title}>Canales de {'listName'}</TextStyled>
             <TextInput
                 style={styles.searchInput}
                 placeholder="Buscar canal..."
@@ -84,6 +95,6 @@ export default function HomeScreen({}) {
                 onEndReached={loadMoreChannels}
                 onEndReachedThreshold={0.5}
             />
-        </View>
+        </MainLayout>
     )
 }

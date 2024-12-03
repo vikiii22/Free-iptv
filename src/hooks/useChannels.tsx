@@ -5,7 +5,7 @@ import { IChannel } from '../interfaces/channels';
 import axios from 'axios'
 
 export const useChannels = () => {
-    const { actionAddLists } = useAppContext()
+    const { actionAddLists, actionRemoveList } = useAppContext()
 
     const initLoad = async() => {
         await loadLists()
@@ -61,6 +61,7 @@ export const useChannels = () => {
         try {
             const response = await axios.get(m3u8Url)
             const parsedChannels = parseM3U8(response.data)
+            actionAddLists(listName, parsedChannels)
             await saveChannelListToStore(listName, parsedChannels)
         } catch (error) {
             Alert.alert('Error', 'No se pudo cargar la lista m3u8.')
@@ -101,9 +102,45 @@ export const useChannels = () => {
         return channels
     }
 
+    const deleteChannelListFromStore = async (listName: string) => {
+        Alert.alert(
+            "Confirmar eliminación",
+            `¿Estás seguro de que deseas eliminar la lista "${listName}"?`,
+            [
+                {
+                    text: "Cancelar",
+                    style: "cancel"
+                },
+                {
+                    text: "Aceptar",
+                    onPress: async () => {
+                        try {
+                            const storedLists = await SecureStore.getItemAsync('lists')
+                            const lists = storedLists ? JSON.parse(storedLists) : {}
+                
+                            if (lists[listName]) {
+                                delete lists[listName]
+                
+                                await SecureStore.setItemAsync('lists', JSON.stringify(lists))
+                                actionRemoveList(listName)
+                                Alert.alert(`Lista "${listName}" eliminada correctamente.`)
+                            } else {
+                                console.log(`La lista "${listName}" no existe.`)
+                            }
+                        } catch (error) {
+                            console.error('Error al eliminar la lista de canales:', error)
+                        }
+                    },
+                },
+            ],
+            { cancelable: true }
+        )
+    }
+
     return {
         initLoad,
         clearChannelList,
-        handleLoadList
+        handleLoadList,
+        deleteChannelListFromStore
     }
 }

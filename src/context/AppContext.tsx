@@ -13,6 +13,7 @@ interface AppContext {
     actionAddSessionData: (data: ISession) => void
     actionShowScnackbar: (open: boolean, message: string) => void
     actionAddLists: (listName: string, channels: IChannel[]) => void
+    actionRemoveList: (listName: string) => void
 }
 
 const AppContext = createContext<AppContext | undefined>(undefined)
@@ -24,7 +25,8 @@ const AppContextProvider = ({ children }: { children: any }) => {
         snackbar: { open: false, message: ""},
         actionAddSessionData,
         actionShowScnackbar,
-        actionAddLists
+        actionAddLists,
+        actionRemoveList
     })
 
     function actionAddSessionData(user: ISession) {
@@ -56,6 +58,17 @@ const AppContextProvider = ({ children }: { children: any }) => {
             }
         }))
     }
+
+    function actionRemoveList(listName: string) {
+        setAppData((prev) => {
+            const { [listName]: _, ...remainingLists } = prev.lists
+            return {
+                ...prev,
+                lists: remainingLists
+            }
+        })
+    }
+    
 
     return <AppContext.Provider value={appData}>{children}</AppContext.Provider>
 }

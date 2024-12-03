@@ -1,35 +1,54 @@
 import React, { useEffect, useState } from 'react'
-import { View, TextInput, Button, StyleSheet, FlatList, TouchableOpacity } from 'react-native'
+import { View, TextInput, Button, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native'
 import CardList from '../components/Cards/CardList/CardList'
 import Header from '../components/Header/Header'
 import TextStyled from '../components/Text/TextStyled'
 import { useAppContext } from '../context/AppContext'
 import { useChannels } from '../hooks/useChannels'
 import MainLayout from '../layouts/MainLayout'
+import config from '../../config.json'
 
 export default function ManageListsScreen({ navigation }) {
     const { lists } = useAppContext()
 
     const [savedLists, setSavedLists] = useState<string[]>([])
-    const [listName, setListName] = useState('')
-    const [m3u8Url, setM3u8Url] = useState('')
+    const [listName, setListName] = useState<string>('')
+    const [m3u8Url, setM3u8Url] = useState<string>('')
     const [channels, setChannels] = useState([])
+    const [loading, setLoading] = useState<boolean>(false)
 
     const { clearChannelList, handleLoadList } = useChannels()
     // clearChannelList()
 
     useEffect(() => {
         setSavedLists(Object.keys(lists))
-    }, [])
+    }, [lists])
 
     const styles = StyleSheet.create({
         input: { borderWidth: 1, padding: 10, marginVertical: 10 },
+        listContainer: {},
+        formContainer: {
+            backgroundColor: 'white',
+            width: '100%',
+            padding: 20,
+            paddingBottom: 50,
+            borderRadius: config.theme.borderRadius.lg,
+            marginBottom: -20
+        }
     })
 
     return (
         <MainLayout>
-            <Header title='Mis listas'/>
+            <Header
+                title='Mis listas'
+                rightComponent={(
+                    <TouchableOpacity onPress={() => navigation.navigate('Free IPTV')}>
+                        <TextStyled>{"Live"}</TextStyled>
+                    </TouchableOpacity>
+                )}
+            />
             <FlatList
+                style={styles.listContainer}
                 data={savedLists}
                 keyExtractor={(item) => item.toLocaleLowerCase()}
                 renderItem={({ item }) => (
@@ -52,23 +71,39 @@ export default function ManageListsScreen({ navigation }) {
                     />
                 </View>
             ) : (
-                <>
-                    <TextStyled>Nombre de la lista:</TextStyled>
+                <View style={styles.formContainer}>
+                    <TextStyled theme='dark'>Nombre de la lista:</TextStyled>
                     <TextInput
                         style={styles.input}
                         placeholder="Ejemplo: Mis Canales"
                         onChangeText={setListName}
                         value={listName}
                     />
-                    <TextStyled>URL de la lista m3u8:</TextStyled>
+                    <TextStyled theme='dark'>URL de la lista m3u8:</TextStyled>
                     <TextInput
                         style={styles.input}
                         placeholder="Ejemplo: http://example.com/playlist.m3u8"
                         onChangeText={setM3u8Url}
                         value={m3u8Url}
                     />
-                    <Button title="Cargar lista" onPress={() => handleLoadList(listName, m3u8Url)} />
-                </>
+                    {loading ? (
+                        <ActivityIndicator size="large" color={config.theme.colors.primary} />
+                        ) : (
+                        <Button
+                            title="Cargar lista"
+                            onPress={async () => {
+                                setLoading(true);
+                                try {
+                                    await handleLoadList(listName, m3u8Url);
+                                } catch (error) {
+                                    console.error("Error al cargar la lista:", error);
+                                } finally {
+                                    setLoading(false);
+                                }
+                            }}
+                        />
+                    )}
+                </View>
             )}
         </MainLayout>
     )

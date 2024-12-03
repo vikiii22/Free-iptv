@@ -1,39 +1,55 @@
-import { Dimensions, StyleSheet, Text, View } from "react-native";
-import config from "../../../config.json"
-import { TouchableOpacity } from "react-native-gesture-handler";
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { Dimensions, StyleSheet, View } from "react-native";
+import config from "../../../config.json";
 import TextStyled from "../Text/TextStyled";
 import { IHeaderProps } from "./header.interface";
-import Logo from "../Logo/Logo";
 
 export default function Header(props: IHeaderProps) {
-    const { title } = props
+    const { title, centerComponent, leftComponent, rightComponent } = props;
 
     const styles = StyleSheet.create({
         container: {
-            width: Dimensions.get("screen").width - 40,
+            width: Dimensions.get("screen").width - 20,
             marginBottom: 20,
             borderRadius: config.theme.borderRadius.md,
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
+        },
+        sectionLeft: {
+            flex: 1,
+            alignItems: 'flex-start',
+            justifyContent: 'center'
+        },
+        sectionRight: {
+            flex: 1,
+            alignItems: 'flex-end',
+            justifyContent: 'center'
+        },
+        sectionCenter: {
+            flex: 1,
+            alignItems: 'center',
+            justifyContent: 'center'
         }
-    })
+    });
 
     return (
         <View style={styles.container}>
-            <Logo/>
-            <TextStyled size={'lg'}>
-                {title}
-            </TextStyled>
-            <TouchableOpacity>
-                <Icon
-                    name="add-circle-outline"
-                    size={30}
-                    color={config.theme.colors.light}
-                />
-            </TouchableOpacity>
+            <View style={styles.sectionLeft}>
+                {leftComponent || <View />}
+            </View>
+            <View style={styles.sectionCenter}>
+                {title ? (
+                    <TextStyled size={'lg'}>{title}</TextStyled>
+                ) : centerComponent ? (
+                    centerComponent
+                ) : (
+                    <View />
+                )}
+            </View>
+            <View style={styles.sectionRight}>
+                {rightComponent || <View />}
+            </View>
         </View>
-    )
+    );
 }
