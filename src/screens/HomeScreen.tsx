@@ -50,9 +50,9 @@ export default function HomeScreen({}) {
     }
 
     const styles = StyleSheet.create({
-        container: { flex: 1 },
+        container: { flex: 1, backgroundColor: '#212B4E'},
         title: { fontSize: 24, marginBottom: 20 },
-        searchInput: { height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 20, paddingHorizontal: 10 },
+        searchInput: { height: 40, borderColor: 'gray', borderWidth: 1, marginBottom: 20, paddingHorizontal: 10, borderRadius: 10, marginLeft: 10, marginRight: 10 },
         channelItem: { flexDirection: 'row', alignItems: 'center', padding: 10, borderBottomWidth: 1, borderColor: '#ccc' },
         logo: { width: 50, height: 50, marginRight: 10 },
         textContainer: { flex: 1 },
@@ -77,6 +77,7 @@ export default function HomeScreen({}) {
                     <CardChannel 
                         {...item} 
                         key={index} 
+                        isSelected={selectedChannel.id === item.id}
                         onPressChannel={() => setSelectedChannel(item)} 
                         onToggleFavorite={() => console.log('Toggle favorite')}
                     />
