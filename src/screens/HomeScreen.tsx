@@ -11,7 +11,7 @@ import Header from '../components/Header/Header'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
 export default function HomeScreen({ navigation }) {
-    const { lists } = useAppContext()
+    const { lists, session } = useAppContext()
     const { initLoad } = useChannels()
 
     const [searchTerm, setSearchTerm] = useState('')
@@ -26,16 +26,20 @@ export default function HomeScreen({ navigation }) {
     }, [])
 
     useEffect(() => {
-        if (lists) {
-            const firstListSaved = Object.keys(lists)[0]
-            if (firstListSaved) {
-                setFilteredChannels(lists[firstListSaved])
-                setInitialChannels(lists[firstListSaved])
-                setDisplayedChannels(lists[firstListSaved].slice(0, itemsPerPage))
-                setSelectedChannel(lists[firstListSaved][0])
+        const selectedList = session?.selectedList ? Object.keys(lists)[session.selectedList] : Object.keys(lists)[0]
+
+        if (selectedList && lists) {
+            if (selectedList) {
+                setFilteredChannels(lists[selectedList])
+                setInitialChannels(lists[selectedList])
+                setDisplayedChannels(lists[selectedList].slice(0, itemsPerPage))
+                setSelectedChannel(lists[selectedList][0])
             }
+        } else if (!selectedList  && !lists) {
+            setFilteredChannels([])
+            setInitialChannels([])
         }
-    }, [lists])
+    }, [lists, session])
 
     useEffect(() => {
         const channels = initialChannels.filter(channel => 

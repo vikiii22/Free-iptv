@@ -14,6 +14,7 @@ interface AppContext {
     actionShowScnackbar: (open: boolean, message: string) => void
     actionAddLists: (listName: string, channels: IChannel[]) => void
     actionRemoveList: (listName: string) => void
+    actionSetSelectedList: (listName: string) => void
 }
 
 const AppContext = createContext<AppContext | undefined>(undefined)
@@ -26,7 +27,8 @@ const AppContextProvider = ({ children }: { children: any }) => {
         actionAddSessionData,
         actionShowScnackbar,
         actionAddLists,
-        actionRemoveList
+        actionRemoveList,
+        actionSetSelectedList
     })
 
     function actionAddSessionData(user: ISession) {
@@ -55,6 +57,16 @@ const AppContextProvider = ({ children }: { children: any }) => {
             lists: {
                 ...prev.lists,
                 [listName]: channels
+            }
+        }))
+    }
+
+    function actionSetSelectedList(listName: string) {
+        setAppData((prev) => ({
+            ...prev,
+            session: {
+                ...prev.session,
+                selectedList: listName ?? null
             }
         }))
     }

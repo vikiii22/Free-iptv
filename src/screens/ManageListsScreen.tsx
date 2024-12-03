@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, TextInput, Button, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, Button, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native'
 import CardList from '../components/Cards/CardList/CardList'
 import Header from '../components/Header/Header'
 import TextStyled from '../components/Text/TextStyled'
@@ -7,6 +7,7 @@ import { useAppContext } from '../context/AppContext'
 import { useChannels } from '../hooks/useChannels'
 import MainLayout from '../layouts/MainLayout'
 import config from '../../config.json'
+import StyledTextInput from '../components/Inputs/StyledTextInput'
 
 export default function ManageListsScreen({ navigation }) {
     const { lists } = useAppContext()
@@ -34,6 +35,15 @@ export default function ManageListsScreen({ navigation }) {
             paddingBottom: 50,
             borderRadius: config.theme.borderRadius.lg,
             marginBottom: -20
+        },
+        button: {
+            backgroundColor: config.theme.colors.primary,
+            padding: 10,
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            marginTop: 20,
+            borderRadius: config.theme.borderRadius.md
         }
     })
 
@@ -73,24 +83,22 @@ export default function ManageListsScreen({ navigation }) {
             ) : (
                 <View style={styles.formContainer}>
                     <TextStyled theme='dark'>Nombre de la lista:</TextStyled>
-                    <TextInput
-                        style={styles.input}
+                    <StyledTextInput
                         placeholder="Ejemplo: Mis Canales"
                         onChangeText={setListName}
                         value={listName}
                     />
                     <TextStyled theme='dark'>URL de la lista m3u8:</TextStyled>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Ejemplo: http://example.com/playlist.m3u8"
+                    <StyledTextInput
+                        placeholder="Ej: http://example.com/playlist.m3u8"
                         onChangeText={setM3u8Url}
                         value={m3u8Url}
                     />
                     {loading ? (
                         <ActivityIndicator size="large" color={config.theme.colors.primary} />
                         ) : (
-                        <Button
-                            title="Cargar lista"
+                        <TouchableOpacity
+                            style={styles.button}
                             onPress={async () => {
                                 setLoading(true);
                                 try {
@@ -101,7 +109,9 @@ export default function ManageListsScreen({ navigation }) {
                                     setLoading(false);
                                 }
                             }}
-                        />
+                        >
+                            <TextStyled>{'Cargar lista'}</TextStyled>
+                        </TouchableOpacity>
                     )}
                 </View>
             )}

@@ -5,7 +5,7 @@ import { IChannel } from '../interfaces/channels';
 import axios from 'axios'
 
 export const useChannels = () => {
-    const { actionAddLists, actionRemoveList } = useAppContext()
+    const { actionAddLists, actionRemoveList, actionSetSelectedList } = useAppContext()
 
     const initLoad = async() => {
         await loadLists()
@@ -14,6 +14,7 @@ export const useChannels = () => {
     const loadLists = async() => {
         try {
             const savedLists = await SecureStore.getItemAsync('lists')
+            const lastListSelected = await SecureStore.getItemAsync('lastListSelected')
 
             if (savedLists) {
                 const data = JSON.parse(savedLists)
@@ -23,6 +24,10 @@ export const useChannels = () => {
                         actionAddLists(listName, data[listName])
                     })
                 }
+            }
+
+            if (lastListSelected) {
+                actionSetSelectedList(lastListSelected)
             }
         } catch (error) {
             console.error('Error al cargar la lista de canales:', error)
@@ -120,9 +125,14 @@ export const useChannels = () => {
                 
                             if (lists[listName]) {
                                 delete lists[listName]
-                
                                 await SecureStore.setItemAsync('lists', JSON.stringify(lists))
                                 actionRemoveList(listName)
+
+                                const lastListSelected = await SecureStore.getItemAsync('lastListSelected')
+                                if (listName === lastListSelected) {
+                                    actionSetSelectedList('')
+                                }
+
                                 Alert.alert(`Lista "${listName}" eliminada correctamente.`)
                             } else {
                                 console.log(`La lista "${listName}" no existe.`)
