@@ -15,6 +15,7 @@ interface AppContext {
     actionAddLists: (listName: string, channels: IChannel[]) => void
     actionRemoveList: (listName: string) => void
     actionSetSelectedList: (listName: string) => void
+    actionToggleFavorites: (id: string, add: boolean) => void
 }
 
 const AppContext = createContext<AppContext | undefined>(undefined)
@@ -28,7 +29,8 @@ const AppContextProvider = ({ children }: { children: any }) => {
         actionShowScnackbar,
         actionAddLists,
         actionRemoveList,
-        actionSetSelectedList
+        actionSetSelectedList,
+        actionToggleFavorites
     })
 
     function actionAddSessionData(user: ISession) {
@@ -80,7 +82,16 @@ const AppContextProvider = ({ children }: { children: any }) => {
             }
         })
     }
-    
+
+    function actionToggleFavorites(id: string, add: boolean) {
+        setAppData((prev) => ({
+            ...prev,
+            session: {
+                ...prev.session,
+                favorites: add ? [...prev.session.favorites, id] : prev.session.favorites.filter(c => c !== id)
+            }
+        }))
+    }
 
     return <AppContext.Provider value={appData}>{children}</AppContext.Provider>
 }
