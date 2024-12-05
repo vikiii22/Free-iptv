@@ -13,6 +13,9 @@ interface AppContext {
     actionAddSessionData: (data: ISession) => void
     actionShowScnackbar: (open: boolean, message: string) => void
     actionAddLists: (listName: string, channels: IChannel[]) => void
+    actionRemoveList: (listName: string) => void
+    actionSetSelectedList: (listName: string) => void
+    actionToggleFavorites: (id: string, add: boolean) => void
 }
 
 const AppContext = createContext<AppContext | undefined>(undefined)
@@ -24,7 +27,10 @@ const AppContextProvider = ({ children }: { children: any }) => {
         snackbar: { open: false, message: ""},
         actionAddSessionData,
         actionShowScnackbar,
-        actionAddLists
+        actionAddLists,
+        actionRemoveList,
+        actionSetSelectedList,
+        actionToggleFavorites
     })
 
     function actionAddSessionData(user: ISession) {
@@ -53,6 +59,36 @@ const AppContextProvider = ({ children }: { children: any }) => {
             lists: {
                 ...prev.lists,
                 [listName]: channels
+            }
+        }))
+    }
+
+    function actionSetSelectedList(listName: string) {
+        setAppData((prev) => ({
+            ...prev,
+            session: {
+                ...prev.session,
+                selectedList: listName ?? null
+            }
+        }))
+    }
+
+    function actionRemoveList(listName: string) {
+        setAppData((prev) => {
+            const { [listName]: _, ...remainingLists } = prev.lists
+            return {
+                ...prev,
+                lists: remainingLists
+            }
+        })
+    }
+
+    function actionToggleFavorites(id: string, add: boolean) {
+        setAppData((prev) => ({
+            ...prev,
+            session: {
+                ...prev.session,
+                favorites: add ? [...prev.session.favorites, id] : prev.session.favorites.filter(c => c !== id)
             }
         }))
     }

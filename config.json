@@ -5,7 +5,8 @@
             "secondary": "#212B4E",
             "background": "#101324",
             "light": "#E7F2FF",
-            "dark": "#111"
+            "dark": "#111",
+            "white": "#fffff"
         },
         "fontSize": {
             "sm": 14,
@@ -15,7 +16,7 @@
         "borderRadius": {
             "sm": 5,
             "md": 10,
-            "lg": 20   
+            "lg": 20
         }
     },
     "lists": {

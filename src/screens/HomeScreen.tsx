@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, TextInput } from 'react-native'
+import { FlatList, StyleSheet, TextInput } from 'react-native'
 import Player from '../components/Player/Player'
 import { useAppContext } from '../context/AppContext'
 import { useChannels } from '../hooks/useChannels'
 import { IChannel } from '../interfaces/channels'
 import CardChannel from '../components/Cards/CardChannel/CardChannel'
+import MainLayout from '../layouts/MainLayout'
+import TextStyled from '../components/Text/TextStyled'
+import Header from '../components/Header/Header'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
-export default function HomeScreen({}) {
-    const { lists } = useAppContext()
+export default function HomeScreen({ navigation }) {
+    const { lists, session } = useAppContext()
     const { initLoad } = useChannels()
 
     const [searchTerm, setSearchTerm] = useState('')
@@ -22,16 +26,20 @@ export default function HomeScreen({}) {
     }, [])
 
     useEffect(() => {
-        if (lists) {
-            const firstListSaved = Object.keys(lists)[0]
-            if (firstListSaved) {
-                setFilteredChannels(lists[firstListSaved])
-                setInitialChannels(lists[firstListSaved])
-                setDisplayedChannels(lists[firstListSaved].slice(0, itemsPerPage))
-                setSelectedChannel(lists[firstListSaved][0])
+        const selectedList = session?.selectedList ? Object.keys(lists)[session.selectedList] : Object.keys(lists)[0]
+
+        if (selectedList && lists) {
+            if (selectedList) {
+                setFilteredChannels(lists[selectedList])
+                setInitialChannels(lists[selectedList])
+                setDisplayedChannels(lists[selectedList].slice(0, itemsPerPage))
+                setSelectedChannel(lists[selectedList][0])
             }
+        } else if (!selectedList  && !lists) {
+            setFilteredChannels([])
+            setInitialChannels([])
         }
-    }, [lists])
+    }, [lists, session])
 
     useEffect(() => {
         const channels = initialChannels.filter(channel => 
@@ -61,9 +69,17 @@ export default function HomeScreen({}) {
     })
 
     return (
-        <View style={styles.container}>
+        <MainLayout>
+            <Header
+                title='Free IPTV'
+                leftComponent={
+                    <TouchableOpacity onPress={() => navigation.navigate('Mis Listas')}>
+                        <TextStyled>{'Mis Listas'}</TextStyled>
+                    </TouchableOpacity>
+                }
+            />
             <Player {...selectedChannel} />
-            <Text style={styles.title}>Canales de {'listName'}</Text>
+            <TextStyled style={styles.title}>Canales de {'listName'}</TextStyled>
             <TextInput
                 style={styles.searchInput}
                 placeholder="Buscar canal..."
@@ -85,6 +101,6 @@ export default function HomeScreen({}) {
                 onEndReached={loadMoreChannels}
                 onEndReachedThreshold={0.5}
             />
-        </View>
+        </MainLayout>
     )
 }

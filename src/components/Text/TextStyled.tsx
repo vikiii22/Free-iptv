@@ -1,10 +1,10 @@
 import React from 'react'
-import { StyleSheet, Text } from 'react-native'
+import { Text } from 'react-native'
 import { ITextProps } from './text.interface'
 import config from '../../../config.json'
 
 export default function TextStyled(props: ITextProps) {
-    const { children, theme='light', size='md' } = props
+    const { children, theme='light', size='md', style } = props
 
     return (
         <Text

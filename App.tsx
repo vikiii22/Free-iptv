@@ -6,12 +6,13 @@ import HomeScreen from './src/screens/HomeScreen'
 import { AppContextProvider } from './src/context/AppContext'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import { StyleSheet, StatusBar, Button } from 'react-native'
+import config from "./config.json"
 
 const Stack = createStackNavigator()
 
 export default function App() {
   const defaultOptions = {
-    headerShown: true,
+    headerShown: false,
     headerStatusBarHeight: 10
   }
 
@@ -19,6 +20,7 @@ export default function App() {
     container: {
       flex: 1,
       paddingTop: StatusBar.currentHeight,
+      backgroundColor: config.theme.colors.secondary // for status bar too
     }
   })
 
@@ -59,6 +61,13 @@ export default function App() {
                   headerShown: false
                 })}
                 name="Mi Cuenta"
+                component={ManageListsScreen}
+              />
+              <Stack.Screen
+                options={({}) => ({
+                  presentation: 'modal'
+                })}
+                name="modal"
                 component={ManageListsScreen}
               />
             </Stack.Navigator>
