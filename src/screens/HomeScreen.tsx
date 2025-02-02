@@ -62,12 +62,20 @@ export default function HomeScreen({ navigation }) {
         title: { marginTop: 10 },
         searchInput: {
             height: 40,
-            borderColor: 'gray',
+            borderColor: 'white',
+            color: 'white',
             borderWidth: 1,
-            marginBottom: 20,
-            paddingHorizontal: 10
+            marginBottom: 10,
+            paddingHorizontal: 10,
+            borderRadius: config.theme.borderRadius.sm
         },
-        channelItem: { flexDirection: 'row', alignItems: 'center', padding: 10, borderBottomWidth: 1, borderColor: '#ccc' },
+        channelItem: {
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: 10,
+            borderBottomWidth: 1,
+            borderColor: '#ccc'
+        },
         logo: { width: 50, height: 50, marginRight: 10 },
         textContainer: { flex: 1 },
         channelText: { fontSize: 18 },
@@ -97,6 +105,7 @@ export default function HomeScreen({ navigation }) {
                             placeholder="Buscar canal..."
                             value={searchTerm}
                             onChangeText={setSearchTerm}
+                            placeholderTextColor="white"
                         />
                         <FlatList
                             data={displayedChannels}

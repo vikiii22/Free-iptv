@@ -5,12 +5,12 @@ import { LinearGradient } from "expo-linear-gradient";
 import { ICardsProps } from "../../Cards/cards.interface";
 
 interface ExtendedCardsProps extends ICardsProps {
-  isSelected?: boolean;
+  isSelected?: boolean
 }
 
 const styles = StyleSheet.create({
     cardContainer: {
-        marginVertical: 10,
+        marginVertical: 0,
         borderRadius: 15,
         overflow: "hidden",
     },
