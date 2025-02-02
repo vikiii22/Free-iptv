@@ -4,6 +4,7 @@
     "slug": "free-iptv",
     "version": "1.0.0",
     "jsEngine": "jsc",
+    "orientation": "all",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {

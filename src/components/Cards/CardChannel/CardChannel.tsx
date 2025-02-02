@@ -4,6 +4,9 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { LinearGradient } from "expo-linear-gradient";
 import { ICardsProps } from "../../Cards/cards.interface";
 
+interface ExtendedCardsProps extends ICardsProps {
+  isSelected?: boolean;
+}
 
 const styles = StyleSheet.create({
     cardContainer: {
@@ -40,14 +43,13 @@ const styles = StyleSheet.create({
     },
 });
 
-
-export default function CardChannel(props: ICardsProps) {
-    const { name, logo, group, favorite, onPressChannel, onToggleFavorite } = props;
+export default function CardChannel(props: ExtendedCardsProps) {
+    const { name, logo, group, favorite, onPressChannel, onToggleFavorite, isSelected } = props;
 
     return (
         <TouchableOpacity onPress={onPressChannel} style={styles.cardContainer}>
             <LinearGradient
-                colors={["#6EB5FF", "#567DF4"]}
+                colors={isSelected ? ["#6EB5FF", "#567DF4"] : ["#212B4E", "#212B4E"]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
                 style={styles.cardBackground}

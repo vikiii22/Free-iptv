@@ -108,6 +108,7 @@ export default function HomeScreen({ navigation }) {
                                     key={index} 
                                     onPressChannel={() => setSelectedChannel(item)} 
                                     onToggleFavorite={() => console.log('Toggle favorite')}
+                                    isSelected={selectedChannel.id === item.id}
                                 />
                             )}
                             onEndReached={loadMoreChannels}
