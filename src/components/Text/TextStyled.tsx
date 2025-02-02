@@ -8,13 +8,13 @@ export default function TextStyled(props: ITextProps) {
 
     return (
         <Text
-            style={{
+            style={[{
                 color: theme === 'dark' ? config.theme.colors.dark : config.theme.colors.light,
                 fontSize: size === 'sm' ? config.theme.fontSize.sm
                     : size === 'md' ? config.theme.fontSize.md
                     : size === 'lg' ? config.theme.fontSize.lg
                     : config.theme.fontSize.md
-            }}
+            }, style]}
         >
             {children}
         </Text>

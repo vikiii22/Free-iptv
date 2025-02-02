@@ -27,7 +27,6 @@ export default function ManageListsScreen({ navigation }) {
 
     const styles = StyleSheet.create({
         input: { borderWidth: 1, padding: 10, marginVertical: 10 },
-        listContainer: {},
         formContainer: {
             backgroundColor: 'white',
             width: '100%',

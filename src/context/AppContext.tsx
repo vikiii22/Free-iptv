@@ -54,6 +54,9 @@ const AppContextProvider = ({ children }: { children: any }) => {
     }
 
     function actionAddLists(listName: string, channels: IChannel[]) {
+        if (!appData.lists.length) {
+            actionSetSelectedList(listName)
+        }
         setAppData((prev) => ({
             ...prev,
             lists: {
