@@ -45,7 +45,7 @@ export default function ManageListsScreen({ navigation }) {
             borderRadius: config.theme.borderRadius.md
         }
     })
-    console.log(session)
+
     return (
         <MainLayout>
             <Header

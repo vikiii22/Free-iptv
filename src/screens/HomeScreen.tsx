@@ -95,7 +95,7 @@ export default function HomeScreen({ navigation }) {
         noLists: { textAlign: 'center', marginBottom: 20, marginHorizontal: 20 },
         channelContainer: { width: '100%' }
     })
-    console.log(route.name)
+
     return (
         <MainLayout>
             {!loading ? (
