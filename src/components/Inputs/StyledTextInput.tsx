@@ -13,6 +13,7 @@ export default function StyledTextInput(props: InputProps) {
     const styles = StyleSheet.create({
         container: {
             marginVertical: 10,
+            width: '100%'
         },
         label: {
             fontSize: 14,
@@ -21,11 +22,13 @@ export default function StyledTextInput(props: InputProps) {
         },
         input: {
             height: 40,
+            width: '100%',
+            borderRadius: config.theme.borderRadius.sm,
             borderWidth: 1,
             borderColor: config.theme.colors.dark,
-            borderRadius: config.theme.borderRadius.sm,
             paddingHorizontal: 10,
             backgroundColor: config.theme.colors.white,
+            color: config.theme.colors.white,
             fontSize: config.theme.fontSize.md
         },
         error: {

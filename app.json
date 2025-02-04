@@ -3,6 +3,7 @@
     "name": "Free IPTV",
     "slug": "free-iptv",
     "version": "1.0.0",
+    "jsEngine": "jsc",
     "orientation": "all",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -12,12 +13,7 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "NSCameraUsageDescription": "This app uses the camera to take pictures.",
-      "NSPhotoLibraryUsageDescription": "This app uses the photo library to store pictures.",
-      "NSMicrophoneUsageDescription": "This app uses the microphone to record audio.",
-      "NSAppTransportSecurity": {
-        "NSAllowsArbitraryLoads": true
-      }
+      "bundleIdentifier": "com.viking.freeIptv"
     },
     "android": {
       "adaptiveIcon": {
@@ -39,6 +35,13 @@
         "expo-av",
         {
           "microphonePermissions": "Allow $(PRODUCT_NAME) to access your microphone"
+        }
+      ],
+      [
+        "expo-secure-store",
+        {
+          "configureAndroidBackup": true,
+          "faceIDPermission": "Allow $(PRODUCT_NAME) to access your Face ID biometric data."
         }
       ]
     ],
