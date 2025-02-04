@@ -5,7 +5,12 @@ import { IChannel } from '../interfaces/channels';
 import axios from 'axios'
 
 export const useChannels = () => {
-    const { actionAddLists, actionRemoveList, actionSetSelectedList } = useAppContext()
+    const {
+        actionAddLists,
+        actionRemoveList,
+        actionSetSelectedList,
+        actionToggleFavorites
+    } = useAppContext()
 
     const initLoad = async() => {
         await loadLists()
@@ -129,9 +134,6 @@ export const useChannels = () => {
                                 actionRemoveList(listName)
 
                                 const lastListSelected = await SecureStore.getItemAsync('lastListSelected')
-                                if (listName === lastListSelected) {
-                                    actionSetSelectedList('')
-                                }
 
                                 Alert.alert(`Lista "${listName}" eliminada correctamente.`)
                             } else {
@@ -147,10 +149,25 @@ export const useChannels = () => {
         )
     }
 
+    const setSelectedListToStore = async (listName: string) => {
+        await SecureStore.setItemAsync('lastListSelected', listName)
+    }
+
+    const setChannelListToStore = async (lists: any) => {
+        await SecureStore.setItemAsync('lists', JSON.stringify(lists))
+    }
+
+    const toggleFavorites = async (channelId: string, add: boolean) => {
+        actionToggleFavorites(channelId, add)
+    }
+
     return {
         initLoad,
         clearChannelList,
         handleLoadList,
-        deleteChannelListFromStore
+        deleteChannelListFromStore,
+        setSelectedListToStore,
+        setChannelListToStore,
+        toggleFavorites
     }
 }

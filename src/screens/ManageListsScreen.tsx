@@ -10,7 +10,7 @@ import config from '../../config.json'
 import StyledTextInput from '../components/Inputs/StyledTextInput'
 
 export default function ManageListsScreen({ navigation }) {
-    const { lists } = useAppContext()
+    const { lists, session } = useAppContext()
 
     const [savedLists, setSavedLists] = useState<string[]>([])
     const [listName, setListName] = useState<string>('')
@@ -45,7 +45,7 @@ export default function ManageListsScreen({ navigation }) {
             borderRadius: config.theme.borderRadius.md
         }
     })
-
+    console.log(session)
     return (
         <MainLayout>
             <Header
@@ -57,7 +57,6 @@ export default function ManageListsScreen({ navigation }) {
                 )}
             />
             <FlatList
-                style={styles.listContainer}
                 data={savedLists}
                 keyExtractor={(item) => item.toLocaleLowerCase()}
                 renderItem={({ item }) => (

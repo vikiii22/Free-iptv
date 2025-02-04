@@ -12,24 +12,35 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import StyledTouchableOpacity from '../components/Buttons/StyledTouchableOpacity'
 import config from '../../config.json'
 import StyledTextInput from '../components/Inputs/StyledTextInput'
+import { useRoute } from '@react-navigation/native';
 
 export default function HomeScreen({ navigation }) {
     const { lists, session } = useAppContext()
-    const { initLoad } = useChannels()
+    const { initLoad, setSelectedListToStore, toggleFavorites, setChannelListToStore } = useChannels()
+    const route = useRoute()
 
     const [searchTerm, setSearchTerm] = useState('')
+    const [loading, setLoading] = useState<boolean>(false)
     const [initialChannels, setInitialChannels] = useState<IChannel[]>([])
     const [filteredChannels, setFilteredChannels] = useState<IChannel[]>([])
     const [selectedChannel, setSelectedChannel] = useState<IChannel>(null)
     const [displayedChannels, setDisplayedChannels] = useState<IChannel[]>([])
     const itemsPerPage = 10
 
+    const handleLoad = async () => {
+        setLoading(true)
+        await initLoad()
+        setLoading(false)
+    }
+
     useEffect(() => {
-        initLoad()
+        handleLoad()
     }, [])
 
     useEffect(() => {
         const selectedList = session?.selectedList
+        setSelectedListToStore(selectedList)
+        setChannelListToStore(lists)
 
         if (selectedList && lists[selectedList]) {
             setFilteredChannels(lists[selectedList])
@@ -84,56 +95,63 @@ export default function HomeScreen({ navigation }) {
         noLists: { textAlign: 'center', marginBottom: 20, marginHorizontal: 20 },
         channelContainer: { width: '100%' }
     })
-
+    console.log(route.name)
     return (
         <MainLayout>
-            <Header
-                title='Free IPTV'
-                leftComponent={
-                    <TouchableOpacity onPress={() => navigation.navigate('Mis Listas')}>
-                        <TextStyled>{'Mis Listas'}</TextStyled>
-                    </TouchableOpacity>
-                }
-            />
-            <View style={styles.container}>
-                {(session && session.selectedList && lists) ? (
-                    <>
-                        <Player {...selectedChannel} />
-                        <TextStyled style={styles.title} size={'md'}>Canales de {session.selectedList}</TextStyled>
-                        <StyledTextInput
-                            style={styles.searchInput}
-                            placeholder="Buscar canal..."
-                            value={searchTerm}
-                            onChangeText={setSearchTerm}
-                            placeholderTextColor="white"
-                        />
-                        <FlatList
-                            data={displayedChannels}
-                            style={styles.channelContainer}
-                            keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
-                            renderItem={({ item, index }) => (
-                                <CardChannel 
-                                    {...item} 
-                                    key={index} 
-                                    onPressChannel={() => setSelectedChannel(item)} 
-                                    onToggleFavorite={() => console.log('Toggle favorite')}
-                                    isSelected={selectedChannel.id === item.id}
-                                />
-                            )}
-                            onEndReached={loadMoreChannels}
-                            onEndReachedThreshold={0.5}
-                        />
-                    </>
-                ) : (
-                    <>
-                        <TextStyled style={styles.noLists}>{'No se han encontrado listas de canales'}</TextStyled>
-                        <StyledTouchableOpacity
-                            onPress={() => navigation.navigate('Mis Listas')}
-                            text={'Añade tu lista'}
-                        />
-                    </>
-                )}
-            </View>
+            {!loading ? (
+                <>
+                <Header
+                    title='Free IPTV'
+                    leftComponent={
+                        <TouchableOpacity onPress={() => navigation.navigate('Mis Listas')}>
+                            <TextStyled>{'Mis Listas'}</TextStyled>
+                        </TouchableOpacity>
+                    }
+                />
+                <View style={styles.container}>
+                    {(session && session.selectedList && lists) ? (
+                        <>
+                            <Player {...selectedChannel} isMuted={route.name !== "Free IPTV"}/>
+                            <TextStyled style={styles.title} size={'md'}>Canales de {session.selectedList}</TextStyled>
+                            <StyledTextInput
+                                style={styles.searchInput}
+                                placeholder="Buscar canal..."
+                                value={searchTerm}
+                                onChangeText={setSearchTerm}
+                                placeholderTextColor="white"
+                            />
+                            <FlatList
+                                data={displayedChannels}
+                                style={styles.channelContainer}
+                                keyExtractor={(item, index) => item.id ? item.id.toString() : index.toString()}
+                                renderItem={({ item, index }) => (
+                                    <CardChannel 
+                                        {...item} 
+                                        key={index} 
+                                        onPressChannel={() => setSelectedChannel(item)} 
+                                        onToggleFavorite={() => toggleFavorites(item.id, !item.favorite)}
+                                        isSelected={selectedChannel.id === item.id}
+                                        favorite={item.favorite}
+                                    />
+                                )}
+                                onEndReached={loadMoreChannels}
+                                onEndReachedThreshold={0.5}
+                            />
+                        </>
+                    ) : (
+                        <>
+                            <TextStyled style={styles.noLists}>{'No se han encontrado listas de canales'}</TextStyled>
+                            <StyledTouchableOpacity
+                                onPress={() => navigation.navigate('Mis Listas')}
+                                text={'Añade tu lista'}
+                            />
+                        </>
+                    )}
+                </View>
+                </>
+            ) : (
+                <TextStyled style={styles.noLists}>{'Cargando'}</TextStyled>
+            )}
         </MainLayout>
     )
 }

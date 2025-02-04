@@ -4,7 +4,7 @@ import { IPlayerProps } from './Player.interface'
 import config from '../../../config.json'
 
 export default function Player(props: IPlayerProps) {
-    const { url } = props
+    const { url, isMuted } = props
     
     const styles = StyleSheet.create({
         video: {
@@ -23,6 +23,7 @@ export default function Player(props: IPlayerProps) {
             shouldPlay
             resizeMode={ResizeMode.CONTAIN}
             onError={(err) => console.log('Error:', err)}
+            isMuted={isMuted}
         />
     )
 }

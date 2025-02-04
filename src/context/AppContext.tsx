@@ -54,11 +54,12 @@ const AppContextProvider = ({ children }: { children: any }) => {
     }
 
     function actionAddLists(listName: string, channels: IChannel[]) {
-        if (!appData.lists.length) {
-            actionSetSelectedList(listName)
-        }
         setAppData((prev) => ({
             ...prev,
+            session: {
+                ...prev.session,
+                selectedList: prev.session && prev.session.selectedList === "" && !prev.lists ? listName : prev.session ? prev.session.selectedList : ""
+            },
             lists: {
                 ...prev.lists,
                 [listName]: channels
@@ -79,19 +80,36 @@ const AppContextProvider = ({ children }: { children: any }) => {
     function actionRemoveList(listName: string) {
         setAppData((prev) => {
             const { [listName]: _, ...remainingLists } = prev.lists
+
             return {
                 ...prev,
+                session: {
+                    ...prev.session,
+                    selectedList: prev.session.selectedList === listName && Object.keys(remainingLists).length === 0
+                        ? ""
+                        : prev.session.selectedList === listName && Object.keys(remainingLists).length > 0
+                            ? Object.keys(remainingLists)[0]
+                            : prev.session.selectedList
+                },
                 lists: remainingLists
             }
         })
     }
 
-    function actionToggleFavorites(id: string, add: boolean) {
+    function actionToggleFavorites(channelId: string, add: boolean) {
         setAppData((prev) => ({
             ...prev,
-            session: {
-                ...prev.session,
-                favorites: add ? [...prev.session.favorites, id] : prev.session.favorites.filter(c => c !== id)
+            lists: {
+                ...prev.lists,
+                [prev.session.selectedList]: [
+                    ...prev.lists[prev.session.selectedList].map(channel => {
+                        if (channel.id === channelId) {
+                            return { ...channel, favorite: add }
+                        } else {
+                            return channel
+                        }
+                    })
+                ]
             }
         }))
     }
