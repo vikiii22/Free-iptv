@@ -2,6 +2,7 @@
   "expo": {
     "name": "Free IPTV",
     "slug": "free-iptv",
+    "newArchEnabled": true,
     "version": "1.0.0",
     "jsEngine": "jsc",
     "orientation": "all",
