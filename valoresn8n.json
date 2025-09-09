@@ -1,0 +1,112 @@
+{
+  "name": "Ollama Local AI Chat",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "chat",
+        "options": {}
+      },
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "values": {},
+        "options": {}
+      },
+      "name": "Prepare Prompt",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [500, 300],
+      "executeOnce": true,
+      "functionCode": "const historial = $json[\"chatHistory\"] || \"\";\nconst nuevoPrompt = historial + \"\\nUsuario: \" + $json[\"chatInput\"] + \"\\nAgente:\";\nitems[0].json.prompt = nuevoPrompt;\nitems[0].json.chatHistory = nuevoPrompt;\nreturn items;"
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:11434/v1/completions",
+        "method": "POST",
+        "jsonParameters": true,
+        "options": {},
+        "bodyParametersJson": "{\n  \"model\": \"llama3.1\",\n  \"prompt\": \"{{$json[\"prompt\"]}}\",\n  \"stream\": false,\n  \"max_tokens\": 300,\n  \"temperature\": 0.7\n}"
+      },
+      "name": "Send to Ollama",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 1,
+      "position": [750, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "items[0].json.response = items[0].json.choices[0].text;\nitems[0].json.chatHistory = $json[\"chatHistory\"];\nreturn items;"
+      },
+      "name": "Parse Response",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [1000, 300]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "respuestaIA",
+              "value": "{{$json[\"response\"]}}"
+            }
+          ]
+        }
+      },
+      "name": "Respond",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [1250, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Prepare Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Prompt": {
+      "main": [
+        [
+          {
+            "node": "Send to Ollama",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send to Ollama": {
+      "main": [
+        [
+          {
+            "node": "Parse Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Response": {
+      "main": [
+        [
+          {
+            "node": "Respond",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
